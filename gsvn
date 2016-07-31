@@ -1,15 +1,16 @@
 #!/bin/bash
 
+if [ ! -f ./svntools.gradle ];then
+	DOWNURL=https://raw.githubusercontent.com/appbakers/svntools/master/svntools.gradle
+	echo "svntools.gradle not found. downloading..."
+	(wget $DOWNURL 2>/dev/null || curl -O $DOWNURL)
+fi
+
 if [ ! -f ./gradle/wrapper/gradle-wrapper.jar ];then
 	DOWNURL=https://raw.githubusercontent.com/appbakers/gradlew.zip/master/gradlew.zip
 	echo "gradle-wrapper.jar not found. downloading..."
 	(wget $DOWNURL 2>/dev/null || curl -O $DOWNURL) && jar xvf gradlew.zip && rm gradlew.zip && chmod +x ./gradlew && chmod +x ./gsvn
 fi
 
-if [ ! -f ./gradle/wrapper/gradle-wrapper.jar ];then
-	DOWNURL=https://raw.githubusercontent.com/appbakers/svntools/master/svntools.gradle
-	echo "svntools.gradle not found. downloading..."
-	(wget $DOWNURL 2>/dev/null || curl -O $DOWNURL)
-fi
 
-./gradlew -b svntools.gradle "$@"
+./gradlew --daemon -b svntools.gradle "$@"
