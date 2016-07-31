@@ -1,0 +1,43 @@
+buildscript {
+	repositories {
+		jcenter();
+	}
+	dependencies {
+		classpath "at.bxm.gradleplugins:gradle-svntools-plugin:latest.release"
+	}
+}
+apply plugin: "at.bxm.svntools"
+
+task checkout(type: at.bxm.gradleplugins.svntools.tasks.SvnCheckout) {
+	doFirst {
+		assert project.hasProperty("svnUrl");
+		assert project.hasProperty("workspaceDir");
+
+		update = project.hasProperty("update") ? project.update : false;
+		svnUrl = project.svnUrl;
+		workspaceDir = project.workspaceDir;
+		println "update= $update REPOFROM: $svnUrl LOCALTO: $workspaceDir"
+	}
+}
+task export(type: at.bxm.gradleplugins.svntools.tasks.SvnExport) {
+	doFirst {
+		assert project.hasProperty("svnUrl");
+		assert project.hasProperty("targetDir");
+
+		svnUrl = project.svnUrl;
+		targetDir = project.targetDir;
+		if( project.hasProperty("revision") )
+			revision = project.revision;
+		println "revision= $revision REPOFROM: $svnUrl LOCALTO: $targetDir"
+	}
+}
+task update(type: at.bxm.gradleplugins.svntools.tasks.SvnUpdate) {
+	doFirst {
+		assert project.hasProperty("workspaceDir");
+
+		workspaceDir = project.workspaceDir;
+		if( project.hasProperty("revision") )
+			revision = project.revision;
+		println "revision= $revision workspaceDir: $workspaceDir"
+	}
+}

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ ! -f ./gradle/wrapper/gradle-wrapper.jar ];then
+	url=https://raw.githubusercontent.com/appbakers/gradlew.zip/master/gradlew.zip
+	echo "gradle-wrapper.jar not found. downloading..."
+	(wget $url 2>/dev/null || curl -O $url) && jar xvf gradlew.zip && rm gradlew.zip && chmod +x ./gradlew && chmod +x ./gsvn
+fi
+./gradlew -b svntools.gradle "$@"
