@@ -3,6 +3,8 @@ REM simple gradle subversion
 REM below codes are not tested on windows environment yet !!!
 
 REM ###==> create wget.vbs file
+REM
+REM
 
 echo strUrl = WScript.Arguments.Item(0) > wget.vbs
 echo StrFile = WScript.Arguments.Item(1) >> wget.vbs
@@ -31,13 +33,19 @@ echo Next >> wget.vbs
 echo ts.Close >> wget.vbs
 
 REM ###==> create wget.vbs file done
+REM
 
-where /q jar
+SET JAVA_HOME | Findstr "JAVA_HOME"
 IF ERRORLEVEL 1 (
-	ECHO The jar.exe is not reachable. Please check java is installed.
+	ECHO The JAVA_HOME is not defined. Please check java is installed correctly.
 	EXIT /B
 )
 
+REM where /q jar
+REM IF ERRORLEVEL 1 (
+REM 	ECHO The jar.exe is not reachable. Please check java is installed.
+REM 	EXIT /B
+REM )
 
 IF NOT EXIST ".\svntools.gradle" (
 	set DOWNURL=https://raw.githubusercontent.com/appbakers/svntools/master/svntools.gradle
@@ -49,7 +57,14 @@ IF NOT EXIST ".\svntools.gradle" (
 	REM ~dp0 : current directory
 	REM @call cscript "~dp0wget.vbs" %DOWNURL% svntools.gradle
 
-	cmd.exe /c cscript wget.vbs %DOWNURL% svntools.gradle && echo svntools.gradle downloaded.
+	cmd.exe /c cscript wget.vbs %DOWNURL% svntools.gradle 
+	dir svntools.gradle
+	IF ERRORLEVEL 1 (
+		echo svntools.gradle download failed.
+		EXIT /B
+		) else (
+			echo svntools.gradle downloaded.
+		       )
 )
 IF NOT EXIST ".\gradle\wrapper\gradle-wrapper.jar" (
 	set DOWNURL=https://raw.githubusercontent.com/appbakers/gradlew.zip/master/gradlew.zip
@@ -60,7 +75,7 @@ IF NOT EXIST ".\gradle\wrapper\gradle-wrapper.jar" (
 	REM ~dp0 : current directory
 	REM @call cscript "~dp0wget.vbs" %DOWNURL% gradlew.zip
 
-	cmd.exe /c cscript wget.vbs %DOWNURL% gradlew.zip && jar xfM gradlew.zip && delete gradlew.zip && echo gsvn setup is done.
+	cmd.exe /c cscript wget.vbs %DOWNURL% gradlew.zip && %JAVA_HOME%\bin\jar xf gradlew.zip && del gradlew.zip && echo gsvn download is done.
 )
 
 
