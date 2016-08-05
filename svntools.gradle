@@ -8,6 +8,13 @@ buildscript {
 }
 apply plugin: "at.bxm.svntools"
 
+task help() {
+	println "#####	EXAMPLE	#####";
+	println "./gsvn checkout -PsvnUrl=some-great-svn-repository-url -PworkspaceDir=~/workspace/some-great-svn-project";
+	println "./gsvn update -PworkspaceDir=~/workspace/some-great-svn-project";
+	println "./gsvn export -PsvnUrl=som-great-repository-url-with-path -PtargetDir=~/workspace/some-great-folder";
+}
+
 task checkout(type: at.bxm.gradleplugins.svntools.tasks.SvnCheckout) {
 	doFirst {
 		assert project.hasProperty("svnUrl");
