@@ -75,7 +75,7 @@ IF NOT EXIST ".\gradle\wrapper\gradle-wrapper.jar" (
 	REM ~dp0 : current directory
 	REM @call cscript "~dp0wget.vbs" %DOWNURL% gradlew.zip
 
-	cmd.exe /c cscript wget.vbs %DOWNURL% gradlew.zip && %JAVA_HOME%\bin\jar xf gradlew.zip && del gradlew.zip && echo gsvn download is done.
+	cscript wget.vbs %DOWNURL% gradlew.zip && "%JAVA_HOME%\bin\jar" xf gradlew.zip && del gradlew.zip && echo gsvn download is done.
 )
 
 
