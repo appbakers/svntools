@@ -8,6 +8,61 @@ REM ###==> create wget.vbs file
 REM
 REM
 
+
+
+REM ###==> create wget.vbs file done
+REM
+
+SET JAVA_HOME | Findstr "JAVA_HOME"
+IF ERRORLEVEL 1 (
+	ECHO The JAVA_HOME is not defined. Please check java is installed correctly.
+	EXIT /B
+)
+
+REM where /q jar
+REM IF ERRORLEVEL 1 (
+REM 	ECHO The jar.exe is not reachable. Please check java is installed.
+REM 	EXIT /B
+REM )
+
+CALL :getwget
+IF NOT EXIST ".\wget.vbs" (
+	CALL :getwget
+)
+
+IF NOT EXIST ".\svntools.gradle" (
+	set DOWNURL=https://raw.githubusercontent.com/appbakers/svntools/master/svntools.gradle
+	echo "svntools.gradle not exists. downloading..."
+
+	REM run powershell from cmd.exe. (Not Working sometimes so use wget.vbs)
+	REM @powershell -command "& { (New-Object Net.WebClient).DownloadFile(%DOWNURL%, './') }"
+
+	REM ~dp0 : current directory
+	REM @call cscript "~dp0wget.vbs" %DOWNURL% svntools.gradle
+
+	cscript wget.vbs %DOWNURL% svntools.gradle 
+	dir svntools.gradle
+	IF ERRORLEVEL 1 (
+		echo svntools.gradle download failed.
+		EXIT /B
+		) else (
+			echo svntools.gradle downloaded.
+		       )
+)
+IF NOT EXIST ".\gradle\wrapper\gradle-wrapper.jar" (
+	set DOWNURL=https://raw.githubusercontent.com/appbakers/gradlew.zip/master/gradlew.zip
+	echo "gradle-wrapper.jar not exists. downloading..."
+	REM run powershell from cmd.exe. (Not Working sometimes so use wget.vbs)
+	REM @powershell -command "& { (New-Object Net.WebClient).DownloadFile(%DOWNURL%, './') }"
+
+	REM ~dp0 : current directory
+	REM @call cscript "~dp0wget.vbs" %DOWNURL% gradlew.zip
+
+	cscript wget.vbs %DOWNURL% gradlew.zip && "%JAVA_HOME%\bin\jar" xf gradlew.zip && del gradlew.zip && echo gsvn download is done.
+)
+
+GOTO End
+:getwget
 echo strUrl = WScript.Arguments.Item(0) > wget.vbs
 echo StrFile = WScript.Arguments.Item(1) >> wget.vbs
 echo Const HTTPREQUEST_PROXYSETTING_DEFAULT = 0 >> wget.vbs
@@ -34,51 +89,5 @@ echo ts.Write Chr(255 And Ascb(Midb(varByteArray,lngCounter + 1,1))) >> wget.vbs
 echo Next >> wget.vbs
 echo ts.Close >> wget.vbs
 
-REM ###==> create wget.vbs file done
-REM
-
-SET JAVA_HOME | Findstr "JAVA_HOME"
-IF ERRORLEVEL 1 (
-	ECHO The JAVA_HOME is not defined. Please check java is installed correctly.
-	EXIT /B
-)
-
-REM where /q jar
-REM IF ERRORLEVEL 1 (
-REM 	ECHO The jar.exe is not reachable. Please check java is installed.
-REM 	EXIT /B
-REM )
-
-IF NOT EXIST ".\svntools.gradle" (
-	set DOWNURL=https://raw.githubusercontent.com/appbakers/svntools/master/svntools.gradle
-	echo "svntools.gradle not exists. downloading..."
-
-	REM run powershell from cmd.exe. (Not Working sometimes so use wget.vbs)
-	REM @powershell -command "& { (New-Object Net.WebClient).DownloadFile(%DOWNURL%, './') }"
-
-	REM ~dp0 : current directory
-	REM @call cscript "~dp0wget.vbs" %DOWNURL% svntools.gradle
-
-	cmd.exe /c cscript wget.vbs %DOWNURL% svntools.gradle 
-	dir svntools.gradle
-	IF ERRORLEVEL 1 (
-		echo svntools.gradle download failed.
-		EXIT /B
-		) else (
-			echo svntools.gradle downloaded.
-		       )
-)
-IF NOT EXIST ".\gradle\wrapper\gradle-wrapper.jar" (
-	set DOWNURL=https://raw.githubusercontent.com/appbakers/gradlew.zip/master/gradlew.zip
-	echo "gradle-wrapper.jar not exists. downloading..."
-	REM run powershell from cmd.exe. (Not Working sometimes so use wget.vbs)
-	REM @powershell -command "& { (New-Object Net.WebClient).DownloadFile(%DOWNURL%, './') }"
-
-	REM ~dp0 : current directory
-	REM @call cscript "~dp0wget.vbs" %DOWNURL% gradlew.zip
-
-	cscript wget.vbs %DOWNURL% gradlew.zip && "%JAVA_HOME%\bin\jar" xf gradlew.zip && del gradlew.zip && echo gsvn download is done.
-)
-
-
+:End
 gradlew.bat --daemon -b .\svntools.gradle %*
