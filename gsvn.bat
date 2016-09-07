@@ -1,3 +1,5 @@
+@echo off
+
 REM simple gradle subversion
 
 REM below codes are not tested on windows environment yet !!!
