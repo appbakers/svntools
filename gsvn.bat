@@ -41,7 +41,7 @@ IF NOT EXIST ".\svntools.gradle" (
 	REM @call cscript "~dp0wget.vbs" %DOWNURL% svntools.gradle
 where wget.exe | Findstr "wget"
 IF ERRORLEVEL 0 (
-	wget -O svntools.gradle %DOWNURL%  
+	wget.exe -O svntools.gradle %DOWNURL%  
 ) ELSE (
 	cscript wget.vbs %DOWNURL% svntools.gradle 
 )
@@ -64,7 +64,7 @@ IF NOT EXIST ".\gradle\wrapper\gradle-wrapper.jar" (
 
 where wget.exe | Findstr "wget"
 IF ERRORLEVEL 0 (
-	wget -O gradlew.zip %DOWNURL% && "%JAVA_HOME%\bin\jar" xf gradlew.zip && del gradlew.zip && echo gsvn download is done.
+	wget.exe -O gradlew.zip %DOWNURL% && "%JAVA_HOME%\bin\jar" xf gradlew.zip && del gradlew.zip && echo gsvn download is done.
 ) ELSE (
 	cscript wget.vbs %DOWNURL% gradlew.zip && "%JAVA_HOME%\bin\jar" xf gradlew.zip && del gradlew.zip && echo gsvn download is done.
 )
