@@ -2,15 +2,8 @@
 
 REM simple gradle subversion
 
-REM below codes are not tested on windows environment yet !!!
 
-REM ###==> create wget.vbs file
-REM
-REM
-
-
-
-REM ###==> create wget.vbs file done
+REM ###==> create wgets.vbs file done
 REM
 
 SET JAVA_HOME | Findstr "JAVA_HOME"
@@ -25,9 +18,9 @@ REM 	ECHO The jar.exe is not reachable. Please check java is installed.
 REM 	EXIT /B
 REM )
 
-CALL :getwget
-IF NOT EXIST ".\wget.vbs" (
-	CALL :getwget
+CALL :getwgets
+IF NOT EXIST ".\wgets.vbs" (
+	CALL :getwgets
 )
 
 IF NOT EXIST ".\svntools.gradle" (
@@ -43,7 +36,7 @@ where wget.exe | Findstr "wget"
 IF ERRORLEVEL 0 (
 	wget.exe -O svntools.gradle %DOWNURL%  
 ) ELSE (
-	cscript wget.vbs %DOWNURL% svntools.gradle 
+	cscript wgets.vbs %DOWNURL% svntools.gradle 
 )
 	dir svntools.gradle
 	IF ERRORLEVEL 1 (
@@ -66,38 +59,42 @@ where wget.exe | Findstr "wget"
 IF ERRORLEVEL 0 (
 	wget.exe -O gradlew.zip %DOWNURL% && "%JAVA_HOME%\bin\jar" xf gradlew.zip && del gradlew.zip && echo gsvn download is done.
 ) ELSE (
-	cscript wget.vbs %DOWNURL% gradlew.zip && "%JAVA_HOME%\bin\jar" xf gradlew.zip && del gradlew.zip && echo gsvn download is done.
+	cscript wgets.vbs %DOWNURL% gradlew.zip && "%JAVA_HOME%\bin\jar" xf gradlew.zip && del gradlew.zip && echo gsvn download is done.
 )
 
 )
 
 GOTO End
-:getwget
-echo strUrl = WScript.Arguments.Item(0) > wget.vbs
-echo StrFile = WScript.Arguments.Item(1) >> wget.vbs
-echo Const HTTPREQUEST_PROXYSETTING_DEFAULT = 0 >> wget.vbs
-echo Const HTTPREQUEST_PROXYSETTING_PRECONFIG = 0 >> wget.vbs
-echo Const HTTPREQUEST_PROXYSETTING_DIRECT = 1 >> wget.vbs
-echo Const HTTPREQUEST_PROXYSETTING_PROXY = 2 >> wget.vbs
-echo Dim http,varByteArray,strData,strBuffer,lngCounter,fs,ts >> wget.vbs
-echo Err.Clear >> wget.vbs
-echo Set http = Nothing >> wget.vbs
-echo Set http = CreateObject("WinHttp.WinHttpRequest.5.1") >> wget.vbs
-echo If http Is Nothing Then Set http = CreateObject("WinHttp.WinHttpRequest") >> wget.vbs
-echo If http Is Nothing Then Set http = CreateObject("MSXML2.ServerXMLHTTP") >> wget.vbs
-echo If http Is Nothing Then Set http = CreateObject("Microsoft.XMLHTTP") >> wget.vbs
-echo http.Open "GET",strURL,False >> wget.vbs
-echo http.Send >> wget.vbs
-echo varByteArray = http.ResponseBody >> wget.vbs
-echo Set http = Nothing >> wget.vbs
-echo Set fs = CreateObject("Scripting.FileSystemObject") >> wget.vbs
-echo Set ts = fs.CreateTextFile(StrFile,True) >> wget.vbs
-echo strData = "" >> wget.vbs
-echo strBuffer = "" >> wget.vbs
-echo For lngCounter = 0 to UBound(varByteArray) >> wget.vbs
-echo ts.Write Chr(255 And Ascb(Midb(varByteArray,lngCounter + 1,1))) >> wget.vbs
-echo Next >> wget.vbs
-echo ts.Close >> wget.vbs
+:getwgets
+echo strUrl = WScript.Arguments.Item(0) > wgets.vbs
+echo StrFile = WScript.Arguments.Item(1) >> wgets.vbs
+echo Const HTTPREQUEST_PROXYSETTING_DEFAULT = 0 >> wgets.vbs
+echo Const HTTPREQUEST_PROXYSETTING_PRECONFIG = 0 >> wgets.vbs
+echo Const HTTPREQUEST_PROXYSETTING_DIRECT = 1 >> wgets.vbs
+echo Const HTTPREQUEST_PROXYSETTING_PROXY = 2 >> wgets.vbs
+echo Dim http,varByteArray,strData,strBuffer,lngCounter,fs,ts >> wgets.vbs
+echo Err.Clear >> wgets.vbs
+echo Set http = Nothing >> wgets.vbs
+echo Set http = CreateObject("WinHttp.WinHttpRequest.5.1") >> wgets.vbs
+echo If http Is Nothing Then Set http = CreateObject("WinHttp.WinHttpRequest") >> wgets.vbs
+echo If http Is Nothing Then Set http = CreateObject("MSXML2.ServerXMLHTTP") >> wgets.vbs
+echo If http Is Nothing Then Set http = CreateObject("Microsoft.XMLHTTP") >> wgets.vbs
+echo http.Open "GET",strURL,False >> wgets.vbs
+echo http.Send >> wgets.vbs
+echo varByteArray = http.ResponseBody >> wgets.vbs
+echo Set http = Nothing >> wgets.vbs
+echo Set fs = CreateObject("Scripting.FileSystemObject") >> wgets.vbs
+echo Set ts = fs.CreateTextFile(StrFile,True) >> wgets.vbs
+echo strData = "" >> wgets.vbs
+echo strBuffer = "" >> wgets.vbs
+echo For lngCounter = 0 to UBound(varByteArray) >> wgets.vbs
+echo ts.Write Chr(255 And Ascb(Midb(varByteArray,lngCounter + 1,1))) >> wgets.vbs
+echo Next >> wgets.vbs
+echo ts.Close >> wgets.vbs
 
 :End
+IF NOT EXIST ".\gradlew.bat" (
+echo gsvn setup failed.
+) ELSE (
 gradlew.bat --daemon -b .\svntools.gradle %*
+)
