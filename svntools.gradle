@@ -48,3 +48,5 @@ task update(type: at.bxm.gradleplugins.svntools.tasks.SvnUpdate) {
 		println "revision= $revision workspaceDir: $workspaceDir"
 	}
 }
+
+defaultTasks 'help'
