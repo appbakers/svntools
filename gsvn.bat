@@ -32,7 +32,7 @@ IF NOT EXIST ".\svntools.gradle" (
 
 	REM ~dp0 : current directory
 	REM @call cscript "~dp0wget.vbs" %DOWNURL% svntools.gradle
-where wget.exe | Findstr "wget"
+where wget.exe 2>&1 | Findstr "wget.exe"
 IF ERRORLEVEL 0 (
 	wget.exe -O svntools.gradle %DOWNURL%  
 ) ELSE (
@@ -55,7 +55,7 @@ IF NOT EXIST ".\gradle\wrapper\gradle-wrapper.jar" (
 	REM ~dp0 : current directory
 	REM @call cscript "~dp0wget.vbs" %DOWNURL% gradlew.zip
 
-where wget.exe | Findstr "wget"
+where wget.exe 2>&1 | Find "wget.exe"
 IF ERRORLEVEL 0 (
 	wget.exe -O gradlew.zip %DOWNURL% && "%JAVA_HOME%\bin\jar" xf gradlew.zip && del gradlew.zip && echo gsvn download is done.
 ) ELSE (
